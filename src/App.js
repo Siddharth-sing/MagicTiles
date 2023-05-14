@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import SingleCard from './components/SingleCard';
+import Particle from "./components/Particles"
 const cardImages = [
   { "src": "./img/helmet-1.png", matched: false },
   { "src": "./img/potion-1.png", matched: false },
@@ -15,6 +16,7 @@ function App() {
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [disabled, setDisabled] = useState(false);
+  const [celebrate, setCelebrate] = useState(false);
 
   const shuffleCards = () => {
     const shuffleCards = [...cardImages, ...cardImages]
@@ -25,6 +27,7 @@ function App() {
     setChoiceTwo(null);  
     setCards(shuffleCards);
     setTurns(0);
+    setCelebrate(false);
   }
   const handleChoice = (card) => {
     console.log(card);
@@ -40,6 +43,7 @@ function App() {
       setDisabled(true);
       if (choiceOne.src === choiceTwo.src) {
         console.log("It's a match!")
+        setCelebrate(true);
         setCards(prevCards => {
           return prevCards.map(card => {
             if (card.src === choiceOne.src) {
@@ -50,6 +54,7 @@ function App() {
           });
         })
         resetTurn();
+        setTimeout(() => setCelebrate(false), 2000);
       } else {
          setTimeout(() => resetTurn(), 500); 
       }
@@ -79,6 +84,7 @@ function App() {
         ))}
       </div>
       <div> <p>No. of turns : </p> {turns} </div>
+      {celebrate?<Particle/>:<div></div>}
     </div>
   );
 }
