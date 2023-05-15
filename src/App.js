@@ -4,11 +4,12 @@ import SingleCard from './components/SingleCard';
 import Particle from "./components/Particles"
 import * as Constants from "./Constants";
 
-const cardImages = Constants.cardImages8;
+const cardImages4 = Constants.cardImages4;
+const cardImages6 = Constants.cardImages6;
+const cardImages8 = Constants.cardImages8;
 
 function App() {
   const [cards, setCards] = useState([]);
-  const [cardsReq, setCardsReq] = useState([]);
   const [turns, setTurns] = useState(0);
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
@@ -16,7 +17,18 @@ function App() {
   const [celebrate, setCelebrate] = useState(false);
   const [cardN, setCardN] = useState(4);
  
-  const shuffleCards = () => {
+  const shuffleCards = (n) => {
+    
+    let cardImages = [];
+    console.log("card, n = ", cardImages, n)
+    if(n === 4){
+      cardImages = cardImages4;
+    }else if(n === 6){
+      cardImages = cardImages6;
+    }else{
+      cardImages = cardImages8;
+    }
+    
     const shuffleCards = [...cardImages, ...cardImages]
       .sort(() => Math.random() - 0.5)
       .map((card) => ({ ...card, id: Math.random() }));
@@ -32,12 +44,14 @@ function App() {
   }
 
   const setCardNF = (n) => {
-    setCardN(n);
+    console.log("Size = ",n);
+    //shuffleCards(n)
+    setCardN(n)
   }
 
   useEffect(() => {
-     shuffleCards()
-  }, []);
+     shuffleCards(cardN);
+  }, [cardN]);
 
   useEffect(() => {
     if (choiceOne && choiceTwo) {
