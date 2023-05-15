@@ -7,7 +7,7 @@ const cardImages4 = Constants.cardImages4;
 const cardImages6 = Constants.cardImages6;
 const cardImages8 = Constants.cardImages8;
 
-export default function Gameboard() {
+export default function Gameboard({ moves }) {
     const [cards, setCards] = useState([]);
     const [turns, setTurns] = useState(0);
     const [choiceOne, setChoiceOne] = useState(null);
@@ -53,6 +53,10 @@ export default function Gameboard() {
     }, [cardN]);
 
     useEffect(() => {
+        moves(turns);
+    }, [turns]);
+
+    useEffect(() => {
         if (choiceOne && choiceTwo) {
             setDisabled(true);
             if (choiceOne.src === choiceTwo.src) {
@@ -81,7 +85,7 @@ export default function Gameboard() {
         setTurns(prevTurns => prevTurns + 1);
         setDisabled(false);
     }
-
+    
     return (
         <div>
             <button onClick={shuffleCards}>New Game</button>

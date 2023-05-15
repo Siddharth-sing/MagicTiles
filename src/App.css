@@ -46,7 +46,7 @@ button:hover {
 }
 
 .dropdown {
-  position: relative;
+  
   display: inline-block;
   background: none;
   border: 2px solid #fff;

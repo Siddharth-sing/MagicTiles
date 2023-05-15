@@ -6,6 +6,7 @@ import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { mainnet, polygon, optimism, arbitrum, goerli, localhost } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import { useState } from 'react';
 
 const alchemyID = "nR8sUsK3eZDZ_0fwNU8L2PV0qc5IYZ7L"
 
@@ -36,16 +37,23 @@ const wagmiConfig = createConfig({
 });
 
 function App() {
+
+  const [moves, setMoves] = useState(0);
+
+  function getMoves(moves) {
+    setMoves(moves);
+  }
+ console.log(moves);
   return (
     <div className="App">
       <div className='sticky top-0'>
         <WagmiConfig config={wagmiConfig}>
           <RainbowKitProvider chains={chains}>
-            <NavBar></NavBar>
+            <NavBar moves = {moves}></NavBar>
           </RainbowKitProvider>
         </WagmiConfig>
       </div>
-      <Gameboard></Gameboard>
+      <Gameboard moves = {getMoves}></Gameboard>
     </div>
   );
 }
