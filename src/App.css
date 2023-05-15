@@ -1,6 +1,5 @@
 .App {
-  max-width: 860px;
-  margin: 40px auto;
+  max-width: 100%;
 }
 button {
   background: none;
@@ -11,10 +10,16 @@ button {
   font-weight: bold;
   cursor: pointer;
   font-size: 1em;
+  margin-right: 15px;
 }
 button:hover {
   background: #c23866;
   color: #fff;
+}
+
+.game-area{
+  max-width: 40vw;
+  margin: 40px auto;
 }
 
 .card-grid4{
@@ -43,16 +48,24 @@ button:hover {
 .dropdown {
   position: relative;
   display: inline-block;
-  margin-top: 25px;
-  padding: 8px 13px 8px 13px;
-  background-color: #c23866;
-  border: 1px solid #ffffff;
-  border-radius: 5px;
+  background: none;
+  border: 2px solid #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: #fff;
   font-weight: bold;
+  cursor: pointer;
+  font-size: 1em;
+  margin-right: 15px;
+}
+.dropdown:hover {
+  background: #c23866;
+  color: #fff;
 }
 
+
 .dropdown-content {
-  background: #110f14;
+  background: none;
   display: none;
   position: absolute;
   min-width: 160px;
@@ -63,3 +76,7 @@ button:hover {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+/* * {
+  border: 1px solid red;
+} */
