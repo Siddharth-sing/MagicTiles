@@ -88,7 +88,6 @@ export default function Gameboard({ moves }) {
     
     return (
         <div>
-            <button onClick={shuffleCards}>New Game</button>
             <div className="dropdown">
                 <span>Select Level</span>
                 <div className="dropdown-content">
@@ -97,6 +96,8 @@ export default function Gameboard({ moves }) {
                     <div className='hover:bg-blue-500 border rounded-lg bg-indigo-950' onClick={() => setCardNF(8)}>8</div>
                 </div>
             </div>
+            <button onClick={shuffleCards}>New Game</button>
+            <button>Gamble</button>
             <div className='game-area'>
                 <div className={cardN ? "card-grid" + cardN : ""} >
                     {cards.map(card => (

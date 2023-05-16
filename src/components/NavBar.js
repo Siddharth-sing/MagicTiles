@@ -6,9 +6,11 @@ const NavBar = ({ moves }) => {
         <div id='Navbar' className='sticky top-0'>
             <nav className='mt-8'>
                 <ul className='flex justify-between py-3 bg-transparent text-white'>
-                    <li className='flex items-end m-8 italic font-bold font-mono text-2xl underline'>
-                        <span className='overline'>FlipFlopper</span>
+                    <li className='flex m-8 italic font-bold font-mono text-2xl '>
+                        <span className='text-2xl'>MagicalFlips</span>
+                        <span className='text-xs'>*Gambling</span>
                     </li>
+                    
                     <li>
                         <ul className='lg:flex justify-evenly font-bold mr-10 text-lg'>
                             {
