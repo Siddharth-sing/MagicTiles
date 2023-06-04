@@ -14,8 +14,6 @@ export default function Particle() {
 
     return (
         <div className="App">
-            <h1>Hello Coders!</h1>
-
             <Particles
                 id="tsparticles"
                 init={particlesInit}

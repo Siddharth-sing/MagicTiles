@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import SingleCard from "./SingleCard";
 import Particle from "./Particles"
 import * as Constants from "../Constants";
+import Gamble from './Gamble';
+import Web3 from 'web3';
+import CasinoJson from '../abi/Casino.json'
 
 const cardImages4 = Constants.cardImages4;
 const cardImages6 = Constants.cardImages6;
@@ -10,14 +13,15 @@ const cardImages8 = Constants.cardImages8;
 export default function Gameboard({ moves }) {
     const [cards, setCards] = useState([]);
     const [turns, setTurns] = useState(0);
+    const [allowedMoves, setAllowedMoves] = useState(0);
     const [choiceOne, setChoiceOne] = useState(null);
     const [choiceTwo, setChoiceTwo] = useState(null);
     const [disabled, setDisabled] = useState(false);
     const [celebrate, setCelebrate] = useState(false);
+    const [popup, setPopup] = useState(false);
     const [cardN, setCardN] = useState(4);
 
     const shuffleCards = (n) => {
-
         let cardImages = [];
         console.log("card, n = ", cardImages, n)
         if (n === 4) {
@@ -37,11 +41,11 @@ export default function Gameboard({ moves }) {
         setCards(shuffleCards);
         setTurns(0);
         setCelebrate(false);
+        setPopup(false);
     }
     const handleChoice = (card) => {
         choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
     }
-
     const setCardNF = (n) => {
         console.log("Size = ", n);
         //shuffleCards(n)
@@ -85,6 +89,42 @@ export default function Gameboard({ moves }) {
         setTurns(prevTurns => prevTurns + 1);
         setDisabled(false);
     }
+
+    const setBetAmount = (betAmount) => {
+        console.log("Bet Amount in Gameboard.js = ", betAmount);
+    }
+    const setPopupStatus = (popup) => {
+        console.log("popup in Gameboard.js = ", popup);
+        setPopup(popup);
+    }
+    const setMovesCounter = (allowedMoves) => {
+        setAllowedMoves(allowedMoves);
+    }
+    console.log("Allowed Moves = ",allowedMoves);
+
+
+    // backend integration 
+
+    const backendWork = async () => {
+
+        const web3 = new Web3(Web3.givenProvider);
+        const networkId = await web3.eth.net.getId();
+        console.log("Network Id : ", networkId);
+        var accounts = web3.eth.getAccounts();
+        accounts = await window.ethereum.enable();
+
+        const casinoContractAddress = CasinoJson.networks[networkId].address;
+        const casinoContract = new web3.eth.Contract(CasinoJson.abi, casinoContractAddress);
+
+        const casinoOwner = await casinoContract.methods._casinoOwner().call();
+        const casinoB\alance = await casinoContract.methods._casinoOwner().call();
+        console.log("The owner of the casino is =", casinoOwner);
+    }
+
+    useEffect(() => {
+      backendWork()
+    }, []);
+
     
     return (
         <div>
@@ -96,8 +136,13 @@ export default function Gameboard({ moves }) {
                     <div className='hover:bg-blue-500 border rounded-lg bg-indigo-950' onClick={() => setCardNF(8)}>8</div>
                 </div>
             </div>
-            <button onClick={shuffleCards}>New Game</button>
-            <button>Gamble</button>
+            <button onClick={() => shuffleCards(cardN)}>New Game</button>
+            <button onClick={() => setPopup(true)}>Gamble</button>
+            {popup ? <Gamble bet={setBetAmount}
+                setPopup={setPopupStatus}
+                level={cardN} 
+                allowed_moves = {setMovesCounter}/>
+                : <div></div>}
             <div className='game-area'>
                 <div className={cardN ? "card-grid" + cardN : ""} >
                     {cards.map(card => (

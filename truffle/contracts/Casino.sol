@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity 0.8.16;
+pragma solidity ^0.8.16;
 
 ////////////////// Using This ONE
 
@@ -36,6 +36,7 @@ contract Casino {
         emit GamblerCreated(_gamblerId, _gamblerWalletAddress, msg.value);
     }
 
+// how to add ETH to casino as an owner
     function ownerAddsFundsToCasino() public payable returns(bool){
         (bool sent, bytes memory data) = address(this).call{value: msg.value}("");
         return sent;
@@ -58,5 +59,6 @@ contract Casino {
         _balanceOfCasino = msg.value + _balanceOfCasino;
     }
 
-    fallback() external payable {}
+
+
 }
