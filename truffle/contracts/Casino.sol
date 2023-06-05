@@ -21,38 +21,59 @@ contract Casino {
     mapping(uint256 => Gambler) private _gamblersList;
     event GamblerCreated(uint256, address, uint256);
 
-    function createGambler()
-        public
-        payable
-    {
+    function createGambler(address _gamblerWalletAddress) public payable {
+        require(msg.value>0, "Error placing bet !!");
         (bool sent, bytes memory data) = address(this).call{value: msg.value}("");
         require(sent, "Failed to send Ether to casino");
         _gamblerId = _gamblerId + 1;
         _gamblersList[_gamblerId] = Gambler(
             _gamblerId,
-            msg.sender,
+            _gamblerWalletAddress,
             msg.value
         );
-        emit GamblerCreated(_gamblerId, msg.sender, msg.value);
+        emit GamblerCreated(_gamblerId, _gamblerWalletAddress, msg.value);
     }
 
-// how to add ETH to casino as an owner
-    function ownerAddsFundsToCasino() public payable returns(bool){
-        require(msg.sender == _casinoOwner, "You are not owner of the casino, you can't access this functionality");
+    function placeBetIfGamblerPreExist(uint256 _GamblerId) public payable {
+        require(msg.value>0, "Error placing bet !!");
         (bool sent, bytes memory data) = address(this).call{value: msg.value}("");
+        _gamblersList[_GamblerId].gamblePriceS = msg.value;
+    }
+
+    function checkExistingGambler() public view returns (uint256 id)
+    {
+        for (uint256 i = 1; i <= _gamblerId; i++) {
+            if (_gamblersList[i].gamblerWalletAdressS == msg.sender) {
+                return i;
+            }
+        }
+    }
+
+    // how to add ETH to casino as an owner
+    function ownerAddsFundsToCasino() public payable returns (bool) {
+        (bool sent, bytes memory data) = address(this).call{value: msg.value}(
+            ""
+        );
         return sent;
     }
 
     function result(bool win, uint256 gambler_Id) public {
         if (win) {
-            uint prizeETH = _gamblersList[gambler_Id].gamblePriceS * 2;
-            require(address(this).balance >= prizeETH, "Not Enough funds right now");
-            emit GamblerCreated(gambler_Id, _gamblersList[gambler_Id].gamblerWalletAdressS, prizeETH );
-            (bool sent, bytes memory data) = _gamblersList[gambler_Id]                          
+            uint256 prizeETH = _gamblersList[gambler_Id].gamblePriceS * 2;
+            require(
+                address(this).balance >= prizeETH,
+                "Not Enough funds right now"
+            );
+            emit GamblerCreated(
+                gambler_Id,
+                _gamblersList[gambler_Id].gamblerWalletAdressS,
+                prizeETH
+            );
+            (bool sent, bytes memory data) = _gamblersList[gambler_Id]
                 .gamblerWalletAdressS
                 .call{value: prizeETH}("");
             require(sent, "Failed to send Ether to casino owner");
-            _balanceOfCasino -= prizeETH; 
+            _balanceOfCasino -= prizeETH;
         }
     }
 
@@ -60,6 +81,5 @@ contract Casino {
         _balanceOfCasino = msg.value + _balanceOfCasino;
     }
 
-
-
+    fallback() external payable {}
 }

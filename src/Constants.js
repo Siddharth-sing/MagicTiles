@@ -1,12 +1,12 @@
 export const cardImages4 = [
-    { "src": "./img/helmet-1.png", matched: false },
-    { "src": "./img/potion-1.png", matched: false },
-    { "src": "./img/ring-1.png", matched: false },
-    { "src": "./img/scroll-1.png", matched: false },
-    { "src": "./img/shield-1.png", matched: false },
-    { "src": "./img/sword-1.png", matched: false },
-    { "src": "./img/helmet-1.png", matched: false },
-    { "src": "./img/potion-1.png", matched: false },
+    { "src": "./img/brown_panda.png", matched: false },
+    { "src": "./img/genie.png", matched: false },
+    { "src": "./img/goku.png", matched: false },
+    { "src": "./img/homer.png", matched: false },
+    { "src": "./img/iron_man.png", matched: false },
+    { "src": "./img/kermit.png", matched: false },
+    { "src": "./img/mario.png", matched: false },
+    { "src": "./img/monster-blue.png", matched: false },
   ];
 export const cardImages6 = [
     { "src": "./img/helmet-1.png", matched: false },

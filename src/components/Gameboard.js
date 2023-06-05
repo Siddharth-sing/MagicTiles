@@ -14,6 +14,7 @@ export default function Gameboard({ moves }) {
     const [cards, setCards] = useState([]);
     const [turns, setTurns] = useState(0);
     const [allowedMoves, setAllowedMoves] = useState(0);
+    const[match, setMatch] = useState(0);
     const [choiceOne, setChoiceOne] = useState(null);
     const [choiceTwo, setChoiceTwo] = useState(null);
     const [disabled, setDisabled] = useState(false);
@@ -24,7 +25,6 @@ export default function Gameboard({ moves }) {
 
     const shuffleCards = (n) => {
         let cardImages = [];
-        console.log("card, n = ", cardImages, n)
         if (n === 4) {
             cardImages = cardImages4;
         } else if (n === 6) {
@@ -58,14 +58,26 @@ export default function Gameboard({ moves }) {
     }, [cardN]);
 
     useEffect(() => {
+        if (allowedMoves > 0) {
+            if (turns > allowedMoves) {
+                console.log("You lose !");
+                shuffleCards(cardN);
+            }
+
+        }
         moves(turns);
+        if(match === cardN*cardN){
+            console.log("You win Party!");
+        }
     }, [turns]);
+
 
     useEffect(() => {
         if (choiceOne && choiceTwo) {
             setDisabled(true);
             if (choiceOne.src === choiceTwo.src) {
                 console.log("It's a match!")
+                setMatch(prevMatch => prevMatch+2);
                 setCelebrate(true);
                 setCards(prevCards => {
                     return prevCards.map(card => {
@@ -75,7 +87,7 @@ export default function Gameboard({ moves }) {
                             return card;
                         }
                     });
-                })
+                });
                 resetTurn();
                 setTimeout(() => setCelebrate(false), 2000);
             } else {
@@ -92,17 +104,20 @@ export default function Gameboard({ moves }) {
     }
 
     const setBetAmount = (betAmount) => {
-        console.log("Bet Amount in Gameboard.js = ", betAmount);
         setbetAmount(betAmount);
     }
     const setPopupStatus = (popup) => {
-        console.log("popup in Gameboard.js = ", popup);
         setPopup(popup);
     }
     const setMovesCounter = (allowedMoves) => {
-        setAllowedMoves(allowedMoves);
+        if (allowedMoves == 0) {
+            setAllowedMoves(allowedMoves);
+            alert("You opt not to play! 🤕");
+        } else {
+            setAllowedMoves(allowedMoves);
+            createGambler();
+        }
     }
-    console.log("Allowed Moves = ", allowedMoves);
 
     //Backend Functionality
 
@@ -110,7 +125,6 @@ export default function Gameboard({ moves }) {
     const [contractAddress, setContractAddress] = useState();
 
     const web3Connection = async () => {
-        const web3 = new Web3(Web3.givenProvider);
         const networkId = await web3.eth.net.getId();
         var accounts = web3.eth.getAccounts();
         accounts = await window.ethereum.enable();
@@ -120,9 +134,17 @@ export default function Gameboard({ moves }) {
 
     const createGambler = async () => {
         const casinoContract = new web3.eth.Contract(CasinoJson.abi, contractAddress);
-        casinoContract.methods.createGambler().send({
-            value: betAmount,
-        });
+        var preExistingGambler = await casinoContract.methods.checkExistingGambler().call();
+        console.log(preExistingGambler);
+        if (preExistingGambler) {
+            casinoContract.methods.placeBetIfGamblerPreExist().send({
+                value: betAmount,
+            });
+        } else {
+            casinoContract.methods.createGambler().send({
+                value: betAmount,
+            });
+        }
     }
 
     const addETHToCasino = async () => {
