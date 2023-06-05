@@ -37,7 +37,6 @@ const wagmiConfig = createConfig({
 });
 
 function App() {
-
   const [moves, setMoves] = useState(0);
 
   function getMoves(moves) {

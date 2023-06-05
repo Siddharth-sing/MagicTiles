@@ -21,7 +21,7 @@ contract Casino {
     mapping(uint256 => Gambler) private _gamblersList;
     event GamblerCreated(uint256, address, uint256);
 
-    function createGambler(address _gamblerWalletAddress)
+    function createGambler()
         public
         payable
     {
@@ -30,14 +30,15 @@ contract Casino {
         _gamblerId = _gamblerId + 1;
         _gamblersList[_gamblerId] = Gambler(
             _gamblerId,
-            _gamblerWalletAddress,
+            msg.sender,
             msg.value
         );
-        emit GamblerCreated(_gamblerId, _gamblerWalletAddress, msg.value);
+        emit GamblerCreated(_gamblerId, msg.sender, msg.value);
     }
 
 // how to add ETH to casino as an owner
     function ownerAddsFundsToCasino() public payable returns(bool){
+        require(msg.sender == _casinoOwner, "You are not owner of the casino, you can't access this functionality");
         (bool sent, bytes memory data) = address(this).call{value: msg.value}("");
         return sent;
     }

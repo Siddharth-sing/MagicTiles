@@ -20,6 +20,7 @@ export default function Gameboard({ moves }) {
     const [celebrate, setCelebrate] = useState(false);
     const [popup, setPopup] = useState(false);
     const [cardN, setCardN] = useState(4);
+    const [betAmount, setbetAmount] = useState(0);
 
     const shuffleCards = (n) => {
         let cardImages = [];
@@ -92,6 +93,7 @@ export default function Gameboard({ moves }) {
 
     const setBetAmount = (betAmount) => {
         console.log("Bet Amount in Gameboard.js = ", betAmount);
+        setbetAmount(betAmount);
     }
     const setPopupStatus = (popup) => {
         console.log("popup in Gameboard.js = ", popup);
@@ -100,32 +102,56 @@ export default function Gameboard({ moves }) {
     const setMovesCounter = (allowedMoves) => {
         setAllowedMoves(allowedMoves);
     }
-    console.log("Allowed Moves = ",allowedMoves);
+    console.log("Allowed Moves = ", allowedMoves);
 
+    //Backend Functionality
 
-    // backend integration 
+    const web3 = new Web3(Web3.givenProvider);
+    const [contractAddress, setContractAddress] = useState();
 
-    const backendWork = async () => {
-
+    const web3Connection = async () => {
         const web3 = new Web3(Web3.givenProvider);
         const networkId = await web3.eth.net.getId();
-        console.log("Network Id : ", networkId);
         var accounts = web3.eth.getAccounts();
         accounts = await window.ethereum.enable();
-
         const casinoContractAddress = CasinoJson.networks[networkId].address;
-        const casinoContract = new web3.eth.Contract(CasinoJson.abi, casinoContractAddress);
-
-        const casinoOwner = await casinoContract.methods._casinoOwner().call();
-        const casinoB\alance = await casinoContract.methods._casinoOwner().call();
-        console.log("The owner of the casino is =", casinoOwner);
+        setContractAddress(casinoContractAddress);
     }
 
+    const createGambler = async () => {
+        const casinoContract = new web3.eth.Contract(CasinoJson.abi, contractAddress);
+        casinoContract.methods.createGambler().send({
+            value: betAmount,
+        });
+    }
+
+    const addETHToCasino = async () => {
+        try {
+            const casinoContract = new web3.eth.Contract(CasinoJson.abi, contractAddress);
+            const _casinoOwner = await casinoContract.methods._casinoOwner().call();
+            const _casinoBalance = await casinoContract.methods._balanceOfCasino().call();
+
+            casinoContract.methods.ownerAddsFundsToCasino().send({
+                from: _casinoOwner,
+                value: 5e18
+            }).then((tx) => {
+                console.log("Success: ", tx);
+            }).catch((e) => {
+                console.log(e.message);
+            });
+            console.log("Balance = ", _casinoBalance);
+        } catch (error) {
+            console.log(error);
+        }
+
+
+    }
+
+
     useEffect(() => {
-      backendWork()
+        web3Connection();
     }, []);
 
-    
     return (
         <div>
             <div className="dropdown">
@@ -138,10 +164,12 @@ export default function Gameboard({ moves }) {
             </div>
             <button onClick={() => shuffleCards(cardN)}>New Game</button>
             <button onClick={() => setPopup(true)}>Gamble</button>
+            <button onClick={addETHToCasino}>Add ETH(s)</button>
+
             {popup ? <Gamble bet={setBetAmount}
                 setPopup={setPopupStatus}
-                level={cardN} 
-                allowed_moves = {setMovesCounter}/>
+                level={cardN}
+                allowed_moves={setMovesCounter} />
                 : <div></div>}
             <div className='game-area'>
                 <div className={cardN ? "card-grid" + cardN : ""} >
