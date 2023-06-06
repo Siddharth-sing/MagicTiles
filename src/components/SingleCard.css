@@ -7,6 +7,7 @@
     display: block;
     border: 2px solid #ffffff;
     border-radius: 6px;
+    transition: transform 0.5s;
 }
 
 .card .front {
@@ -26,4 +27,8 @@
 .flipped .back{
     transform: rotateY(90deg);
     transition-delay: 0s;
+}
+  
+.card:hover {
+    transform: scale(1.1);
 }
