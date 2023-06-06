@@ -20,7 +20,7 @@ export default function ConfirmationPage({ amount, playIt, level }) {
             sumOfDigits = sumOfDigits + remainder;
             n = Math.floor(n / 10);
         }
-        setNoOfMoves(level + sumOfDigits%10);        
+        setNoOfMoves(level*4 + sumOfDigits%10);        
     }
 
     useEffect(() => {

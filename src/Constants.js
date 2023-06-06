@@ -8,7 +8,8 @@ export const cardImages4 = [
     { "src": "./img/mario.png", matched: false },
     { "src": "./img/monster-blue.png", matched: false },
   ];
-export const cardImages6 = [
+
+  export const cardImages6 = [
   { "src": "./img/bmo.png", matched: false },
   { "src": "./img/brown_panda.png", matched: false },
   { "src": "./img/finn.png", matched: false },
@@ -58,8 +59,7 @@ export const cardImages8 = [
   { "src": "./img/prodigy.png", matched: false },
   { "src": "./img/starbucks.png", matched: false },
   { "src": "./img/sun.png", matched: false },
-  { "src": "./img/sun2.png", matched: false },
+  { "src": "./img/walter.png", matched: false },
   { "src": "./img/twitter.png", matched: false },
   { "src": "./img/wendy.png", matched: false },
-
 ];

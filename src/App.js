@@ -7,6 +7,7 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { mainnet, polygon, optimism, arbitrum, goerli, localhost } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { useState } from 'react';
+import WinLose from './components/WinLose';
 
 const alchemyID = "nR8sUsK3eZDZ_0fwNU8L2PV0qc5IYZ7L"
 
@@ -38,10 +39,18 @@ const wagmiConfig = createConfig({
 
 function App() {
   const [moves, setMoves] = useState(0);
+  const [win, setWin] = useState(true);
 
   function getMoves(moves) {
     setMoves(moves);
   }
+  function getResult(win) {
+    setWin(win);
+  }
+function setNewGame(newG) {
+    setWin(newG);
+  }
+
  console.log(moves);
   return (
     <div className="App">
@@ -52,7 +61,9 @@ function App() {
           </RainbowKitProvider>
         </WagmiConfig>
       </div>
-      <Gameboard moves = {getMoves}></Gameboard>
+      {
+        win ? <WinLose newGame = {setNewGame}/> : <Gameboard moves = {getMoves} result = {getResult} ></Gameboard>
+      }
     </div>
   );
 }

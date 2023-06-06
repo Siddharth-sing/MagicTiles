@@ -10,21 +10,10 @@ const NavBar = ({ moves }) => {
                         <span className='text-2xl'>MagicalFlips</span>
                         <span className='text-xs'>*Gambling</span>
                     </li>
-                    
+
                     <li>
                         <ul className='lg:flex justify-evenly font-bold mr-10 text-lg'>
-                            {
-                                <div className='bg-slate-900 py-2 px-4 border border-sky-500 rounded-2xl m-3'>
-                                    <span>Player: </span>
-                                    {"Siddharth"}
-                                </div>
-                            }
-                            {
-                                <div className='bg-slate-900 py-2 px-4 border border-sky-500 rounded-2xl m-3'>
-                                    <span>Score: </span>
-                                    {"99.99"}
-                                </div>
-                            }
+
                             {
                                 <div className='bg-slate-900 py-2 px-4 border border-sky-500 rounded-2xl m-3'>
                                     <span>Moves : </span>

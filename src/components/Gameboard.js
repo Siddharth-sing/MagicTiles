@@ -10,7 +10,7 @@ const cardImages4 = Constants.cardImages4;
 const cardImages6 = Constants.cardImages6;
 const cardImages8 = Constants.cardImages8;
 
-export default function Gameboard({ moves }) {
+export default function Gameboard({ moves, result }) {
     const [cards, setCards] = useState([]);
     const [turns, setTurns] = useState(0);
     const [allowedMoves, setAllowedMoves] = useState(0);
@@ -37,10 +37,12 @@ export default function Gameboard({ moves }) {
             .sort(() => Math.random() - 0.5)
             .map((card) => ({ ...card, id: Math.random() }));
 
+        result(false);
         setChoiceOne(null);
         setChoiceTwo(null);
         setCards(shuffleCards);
         setTurns(0);
+        setMatch(0);
         setCelebrate(false);
         setPopup(false);
     }
@@ -67,11 +69,12 @@ export default function Gameboard({ moves }) {
         }
         moves(turns);
         if(match === cardN*cardN){
+            result(true);
             console.log("You win Party!");
         }
     }, [turns]);
 
-
+    console.log("Match =", match);
     useEffect(() => {
         if (choiceOne && choiceTwo) {
             setDisabled(true);
